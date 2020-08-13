@@ -20,7 +20,7 @@ public class ExistWatcher implements Watcher {
 
     public ExistWatcher() throws IOException {
         zkProperties = new ZkProperties();
-        zooKeeper = new ZooKeeper(zkProperties.getAddress(), 15000, this);
+        zooKeeper = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
     }
 
     public static void main(String[] args) throws Exception {

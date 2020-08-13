@@ -24,7 +24,7 @@ public class AsyncMasterRunnable implements Runnable, Watcher {
 
     public void run() {
         try {
-            zk = new ZooKeeper(zkProperties.getAddress(), 15000, this);
+            zk = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
         } catch (IOException e) {
 
             // 线程模拟多节点，此处只是打印，应抛出，交由调用者处理

@@ -31,7 +31,7 @@ public class PersistentNode implements Watcher {
     }
 
     private void initZookeeper() throws IOException {
-        zk = new ZooKeeper(zkProperties.getAddress(), 15000, this);
+        zk = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
     }
 
     private void createParent(String path) {

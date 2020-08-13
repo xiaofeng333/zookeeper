@@ -21,7 +21,7 @@ public class Worker implements Watcher {
     public Worker() throws IOException {
 
         // 初始化zk
-        zk = new ZooKeeper(zkProperties.getAddress(), 15000, this);
+        zk = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
     }
 
     public static void main(String[] args) throws Exception {

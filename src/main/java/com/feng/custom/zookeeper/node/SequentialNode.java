@@ -13,7 +13,7 @@ public class SequentialNode implements Watcher {
 
     public SequentialNode() throws IOException {
         zkProperties = new ZkProperties();
-        zk = new ZooKeeper(zkProperties.getAddress(), 15000, this);
+        zk = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
 
     }
 
