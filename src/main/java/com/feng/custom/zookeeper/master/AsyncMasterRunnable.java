@@ -1,8 +1,9 @@
 package com.feng.custom.zookeeper.master;
 
-
-import com.feng.custom.zookeeper.component.ZkProperties;
-import org.apache.zookeeper.*;
+import com.feng.custom.zookeeper.Base;
+import org.apache.zookeeper.AsyncCallback;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
@@ -16,18 +17,14 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
  * 为了保持顺序, 只会有一个单独的线程按照接受顺序处理响应包
  * 所以如果回调函数阻塞, 所有后续回调都会被阻塞, 故应避免这么做, 以便回调调用可以快速被处理
  */
-public class AsyncMasterRunnable implements Runnable, Watcher {
-    private ZkProperties zkProperties = new ZkProperties();
-    private String nodePathAsync = "/masterAsync";
-    private ZooKeeper zk;
-    private String serverId = Integer.toHexString(new Random().nextInt());
+public class AsyncMasterRunnable extends Base implements Runnable {
+    private static final String nodePathAsync = "/masterAsync";
+    private static final String serverId = Integer.toHexString(new Random().nextInt());
 
     public void run() {
         try {
-            zk = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
+            initZookeeper();
         } catch (IOException e) {
-
-            // 线程模拟多节点，此处只是打印，应抛出，交由调用者处理
             e.printStackTrace();
             return;
         }
@@ -42,7 +39,7 @@ public class AsyncMasterRunnable implements Runnable, Watcher {
             e.printStackTrace();
         }
         try {
-            zk.close();
+            closeZookeeper();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -97,10 +94,6 @@ public class AsyncMasterRunnable implements Runnable, Watcher {
                 }
             }
         }, null);
-    }
-
-    public void process(WatchedEvent watchedEvent) {
-        System.out.println(watchedEvent);
     }
 }
 

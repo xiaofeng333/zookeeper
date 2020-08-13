@@ -1,36 +1,27 @@
 package com.feng.custom.zookeeper.slave;
 
-import com.feng.custom.zookeeper.component.ZkProperties;
-import org.apache.zookeeper.*;
+import com.feng.custom.zookeeper.Base;
+import org.apache.zookeeper.AsyncCallback;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.Stat;
 
-import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
-public class Worker implements Watcher {
-    private ZooKeeper zk;
-    private ZkProperties zkProperties = new ZkProperties();
-    private String serverId = Integer.toHexString(new Random().nextInt());
-
-    // 创建的临时节点路径
-    private String createdNodeName = "";
-
-    // 创建成功
-    private boolean createdSuccess = false;
-
-    public Worker() throws IOException {
-
-        // 初始化zk
-        zk = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
-    }
+public class Worker extends Base {
+    private static final String serverId = Integer.toHexString(new Random().nextInt());
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     public static void main(String[] args) throws Exception {
         Worker worker = new Worker();
+        worker.initZookeeper();
         worker.register();
-        while (!worker.createdSuccess) {
-        }
+        worker.countDownLatch.await();
         worker.setData("hello");
         Thread.sleep(30000);
+        worker.closeZookeeper();
     }
 
     public void register() {
@@ -42,8 +33,7 @@ public class Worker implements Watcher {
                         break;
                     case OK:
                         System.out.println("registered successfully: " + serverId);
-                        createdNodeName = name;
-                        createdSuccess = true;
+                        countDownLatch.countDown();
                         break;
                     case NODEEXISTS:
                         System.err.println("Already registered: " + serverId);
@@ -57,7 +47,7 @@ public class Worker implements Watcher {
     }
 
     public void setData(String status) {
-        zk.setData(createdNodeName, status.getBytes(), -1, new AsyncCallback.StatCallback() {
+        zk.setData("/workers/worker-" + serverId, status.getBytes(), -1, new AsyncCallback.StatCallback() {
 
             public void processResult(int rc, String path, Object ctx, Stat stat) {
                 switch (KeeperException.Code.get(rc)) {
@@ -72,9 +62,5 @@ public class Worker implements Watcher {
                 }
             }
         }, status);
-    }
-
-    public void process(WatchedEvent watchedEvent) {
-        System.out.println(watchedEvent);
     }
 }

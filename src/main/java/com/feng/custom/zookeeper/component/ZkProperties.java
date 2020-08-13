@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ZkProperties {
+    private static final Object LOCK = new Object();
+    private static volatile ZkProperties zkProperties;
     /**
      * zk地址
      */
@@ -14,17 +16,27 @@ public class ZkProperties {
      */
     private Integer sessionTimeout;
 
-    public ZkProperties() {
-        Properties properties = new Properties();
-        try {
-            InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("zk.properties");
-            properties.load(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
+    private ZkProperties() {
+    }
+
+    public static ZkProperties getInstance() {
+        if (zkProperties == null) {
+            synchronized (LOCK) {
+                if (zkProperties == null) {
+                    zkProperties = new ZkProperties();
+                    Properties properties = new Properties();
+                    InputStream inputStream = ZkProperties.class.getClassLoader().getResourceAsStream("zk.properties");
+                    try {
+                        properties.load(inputStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    zkProperties.setAddress(properties.getProperty("zk.address", "127.0.0.1:2181"));
+                    zkProperties.setSessionTimeout(Integer.valueOf(properties.getProperty("zk.sessionTimeout", "15000")));
+                }
+            }
         }
-        setAddress(properties.getProperty("zk.address"));
-        setSessionTimeout(Integer.valueOf(properties.getProperty("zk.sessionTimeout", "15000")));
+        return zkProperties;
     }
 
     public String getAddress() {

@@ -1,7 +1,8 @@
 package com.feng.custom.zookeeper.master;
 
-import com.feng.custom.zookeeper.component.ZkProperties;
-import org.apache.zookeeper.*;
+import com.feng.custom.zookeeper.Base;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
@@ -15,17 +16,13 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
  * InterruptedException不进行处理，传递给调用者。
  * 发生KeeperException时，开发者需知道此时的状态，所以需要执行getData进行判断, NoNodeException表示该节点仍不存在，继续尝试创建。
  */
-public class SyncMasterRunnable implements Runnable, Watcher {
-    private ZkProperties zkProperties = new ZkProperties();
-    private String nodePathSync = "/masterSync";
+public class SyncMasterRunnable extends Base implements Runnable {
+    private static final String nodePathSync = "/masterSync";
 
     public void run() {
-        ZooKeeper zk;
         try {
-            zk = new ZooKeeper(zkProperties.getAddress(), zkProperties.getSessionTimeout(), this);
+            initZookeeper();
         } catch (IOException e) {
-
-            // 线程模拟多节点，此处只是打印，应抛出，交由调用者处理
             e.printStackTrace();
             return;
         }
@@ -92,13 +89,9 @@ public class SyncMasterRunnable implements Runnable, Watcher {
             e.printStackTrace();
         }
         try {
-            zk.close();
+            closeZookeeper();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public void process(WatchedEvent watchedEvent) {
-        System.out.println(watchedEvent);
     }
 }
