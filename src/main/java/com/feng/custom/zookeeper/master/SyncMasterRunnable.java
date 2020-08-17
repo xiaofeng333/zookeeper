@@ -23,6 +23,8 @@ public class SyncMasterRunnable extends Base implements Runnable {
         try {
             initZookeeper();
         } catch (IOException e) {
+
+            // 线程模拟多节点，此处只是打印，应抛出，交由调用者处理
             e.printStackTrace();
             return;
         }
@@ -61,9 +63,12 @@ public class SyncMasterRunnable extends Base implements Runnable {
 
                         // 其他异常，不进行处理，继续尝试获取节点数据
                         ex.printStackTrace();
+                        continue;
                     }
-                }
 
+                    // 获取数据未抛出异常, 跳出循环
+                    break;
+                }
                 if (isGetData) {
 
                     // 已成功创建节点

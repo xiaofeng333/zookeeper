@@ -19,12 +19,14 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
  */
 public class AsyncMasterRunnable extends Base implements Runnable {
     private static final String nodePathAsync = "/masterAsync";
-    private static final String serverId = Integer.toHexString(new Random().nextInt());
+    private final String serverId = Integer.toHexString(new Random().nextInt());
 
     public void run() {
         try {
             initZookeeper();
         } catch (IOException e) {
+
+            // 线程模拟多节点，此处只是打印，应抛出，交由调用者处理
             e.printStackTrace();
             return;
         }
@@ -91,6 +93,13 @@ public class AsyncMasterRunnable extends Base implements Runnable {
                         return;
                     case CONNECTIONLOSS:
                         checkMaster();
+                        return;
+                    case NODEEXISTS:
+                        if (serverId.equals(new String(data))) {
+                            System.out.println(serverId + " is Master async");
+                        } else {
+                            System.out.println(serverId + "is not Master async");
+                        }
                 }
             }
         }, null);
