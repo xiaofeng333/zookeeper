@@ -37,7 +37,7 @@ public class PersistentNode extends Base {
 
     private void createParent(String path) {
         String data = path.substring(1);
-        zk.create(path, data.getBytes(), OPEN_ACL_UNSAFE, CreateMode.PERSISTENT, new AsyncCallback.StringCallback() {
+        getZk().create(path, data.getBytes(), OPEN_ACL_UNSAFE, CreateMode.PERSISTENT, new AsyncCallback.StringCallback() {
 
             public void processResult(int rc, String path, Object ctx, String name) {
                 switch (KeeperException.Code.get(rc)) {

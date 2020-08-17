@@ -14,7 +14,7 @@ public class ExistWatcher extends Base {
     public static void main(String[] args) throws Exception {
         ExistWatcher existWatcher = new ExistWatcher();
         existWatcher.initZookeeper();
-        existWatcher.zk.getData("/workers", true, new AsyncCallback.DataCallback() {
+        existWatcher.getZk().getData("/workers", true, new AsyncCallback.DataCallback() {
 
             public void processResult(int rc, String path, Object ctx, byte[] bytes, Stat stat) {
                 System.out.println(rc);

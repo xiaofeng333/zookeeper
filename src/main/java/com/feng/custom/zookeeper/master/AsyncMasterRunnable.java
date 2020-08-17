@@ -52,7 +52,7 @@ public class AsyncMasterRunnable extends Base implements Runnable {
      */
     private void runForMaster() {
         System.out.println("async run, serverId: " + serverId);
-        zk.create(nodePathAsync, serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, new AsyncCallback.StringCallback() {
+        getZk().create(nodePathAsync, serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, new AsyncCallback.StringCallback() {
 
             /**
              * 异步调用创建的回调函数
@@ -85,7 +85,7 @@ public class AsyncMasterRunnable extends Base implements Runnable {
      * 检查临时节点的数据
      */
     private void checkMaster() {
-        zk.getData(nodePathAsync, false, new AsyncCallback.DataCallback() {
+        getZk().getData(nodePathAsync, false, new AsyncCallback.DataCallback() {
             public void processResult(int rc, String path, Object ctx, byte[] data, Stat stat) {
                 switch (KeeperException.Code.get(rc)) {
                     case NONODE:

@@ -25,7 +25,7 @@ public class Worker extends Base {
     }
 
     public void register() {
-        zk.create("/workers/worker-" + serverId, "Idle".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, new AsyncCallback.StringCallback() {
+        getZk().create("/workers/worker-" + serverId, "Idle".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, new AsyncCallback.StringCallback() {
             public void processResult(int rc, String path, Object ctx, String name) {
                 switch (KeeperException.Code.get(rc)) {
                     case CONNECTIONLOSS:
@@ -47,7 +47,7 @@ public class Worker extends Base {
     }
 
     public void setData(String status) {
-        zk.setData("/workers/worker-" + serverId, status.getBytes(), -1, new AsyncCallback.StatCallback() {
+        getZk().setData("/workers/worker-" + serverId, status.getBytes(), -1, new AsyncCallback.StatCallback() {
 
             public void processResult(int rc, String path, Object ctx, Stat stat) {
                 switch (KeeperException.Code.get(rc)) {

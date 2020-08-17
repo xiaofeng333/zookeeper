@@ -12,7 +12,7 @@ import java.io.IOException;
  * @date 2020/8/13
  */
 public class Base implements Watcher {
-    protected ZooKeeper zk;
+    private ZooKeeper zk;
 
     /**
      * 初始化zk连接
@@ -36,5 +36,13 @@ public class Base implements Watcher {
      */
     public void process(WatchedEvent watchedEvent) {
         System.out.println(watchedEvent);
+    }
+
+    protected ZooKeeper getZk() {
+        return zk;
+    }
+
+    protected void setZk(ZooKeeper zk) {
+        this.zk = zk;
     }
 }

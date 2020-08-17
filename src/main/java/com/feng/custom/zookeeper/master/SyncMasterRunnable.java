@@ -36,7 +36,7 @@ public class SyncMasterRunnable extends Base implements Runnable {
         boolean isMaster = false;
         while (true) {
             try {
-                zk.create(nodePathSync, serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+                getZk().create(nodePathSync, serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
                 isMaster = true;
                 break;
             } catch (KeeperException e) {
@@ -47,7 +47,7 @@ public class SyncMasterRunnable extends Base implements Runnable {
                     try {
 
                         // 不监视变更，只是获取当前数据
-                        byte[] data = zk.getData(nodePathSync, false, stat);
+                        byte[] data = getZk().getData(nodePathSync, false, stat);
                         isMaster = new String(data).equals(serverId);
                         isGetData = true;
                     } catch (KeeperException.NoNodeException ex) {

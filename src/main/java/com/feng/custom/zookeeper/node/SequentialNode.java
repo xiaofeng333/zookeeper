@@ -17,6 +17,6 @@ public class SequentialNode extends Base {
     }
 
     public String registerSequentialNode() throws KeeperException, InterruptedException {
-        return zk.create("/tasks/task-01-", "task-01".getBytes(), OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+        return getZk().create("/tasks/task-01-", "task-01".getBytes(), OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
     }
 }
