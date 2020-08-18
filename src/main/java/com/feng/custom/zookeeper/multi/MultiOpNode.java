@@ -9,7 +9,6 @@ import java.util.List;
 import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
 
 /**
- * @author fengchaofan
  * @date 2020/8/17
  * <p>
  * multiop原子性的执行多个zk操作, 另一个功能是检查一个znode节点的版本是否匹配{@link Transaction#check}
@@ -25,7 +24,6 @@ public class MultiOpNode extends Base {
 
         // 如下znode无法创建, 故/multi也不会创建成功。
         // transaction.create("/wrong/child", "child".getBytes(), OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-        transaction.create("/multi", "parent".getBytes(), OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         transaction.create("/multi/child", "child".getBytes(), OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         transaction.commit(new AsyncCallback.MultiCallback() {
 
