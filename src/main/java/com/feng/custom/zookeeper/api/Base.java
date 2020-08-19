@@ -1,4 +1,4 @@
-package com.feng.custom.zookeeper;
+package com.feng.custom.zookeeper.api;
 
 import com.feng.custom.zookeeper.component.ZkProperties;
 import org.apache.zookeeper.WatchedEvent;

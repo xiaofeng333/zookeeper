@@ -1,6 +1,6 @@
-package com.feng.custom.zookeeper.watcher;
+package com.feng.custom.zookeeper.api.watcher;
 
-import com.feng.custom.zookeeper.Base;
+import com.feng.custom.zookeeper.api.Base;
 import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.data.Stat;
 

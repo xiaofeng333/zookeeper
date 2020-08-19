@@ -1,6 +1,6 @@
-package com.feng.custom.zookeeper.master;
+package com.feng.custom.zookeeper.api.master;
 
-import com.feng.custom.zookeeper.Base;
+import com.feng.custom.zookeeper.api.Base;
 import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;

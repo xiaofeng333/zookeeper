@@ -1,6 +1,6 @@
-package com.feng.custom.zookeeper.multi;
+package com.feng.custom.zookeeper.api.multi;
 
-import com.feng.custom.zookeeper.Base;
+import com.feng.custom.zookeeper.api.Base;
 import org.apache.zookeeper.*;
 
 import java.io.IOException;
