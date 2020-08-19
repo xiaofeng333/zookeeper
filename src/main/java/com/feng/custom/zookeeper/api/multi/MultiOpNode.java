@@ -2,6 +2,8 @@ package com.feng.custom.zookeeper.api.multi;
 
 import com.feng.custom.zookeeper.api.Base;
 import org.apache.zookeeper.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +17,7 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
  * 使用Transaction来进行演示, 其封装了multi方法, 提供了简单的接口
  */
 public class MultiOpNode extends Base {
+    private static final Logger logger = LoggerFactory.getLogger(MultiOpNode.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
         MultiOpNode multiOpNode = new MultiOpNode();
@@ -33,10 +36,9 @@ public class MultiOpNode extends Base {
              *  具体每个操作的结果保存在opResults中。
              */
             public void processResult(int rc, String path, Object ctx, List<OpResult> opResults) {
-                System.out.println(rc);
-                System.out.println(path);
+                logger.info("processResult, rc: {}, path: {}", rc, path);
                 for (OpResult opResult : opResults) {
-                    System.out.println(opResult);
+                    logger.info("processResult, opResult type: {}", opResult.getType());
                 }
             }
         }, null);

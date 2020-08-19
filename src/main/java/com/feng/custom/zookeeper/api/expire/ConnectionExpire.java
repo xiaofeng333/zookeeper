@@ -3,6 +3,8 @@ package com.feng.custom.zookeeper.api.expire;
 import com.feng.custom.zookeeper.api.Base;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -24,6 +26,8 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
  * 请求或连接时, 该请求或连接就会被拒绝。
  */
 public class ConnectionExpire extends Base {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionExpire.class);
+
     public static void main(String[] args) throws IOException, InterruptedException {
         ConnectionExpire connectionExpire = new ConnectionExpire();
         connectionExpire.initZookeeper();
@@ -32,7 +36,7 @@ public class ConnectionExpire extends Base {
         // 创建临时节点, 会话过期后, 其会被删除
         zk.create("/test", "test".getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, new AsyncCallback.StringCallback() {
             public void processResult(int rc, String path, Object ctx, String name) {
-                System.out.println(rc);
+                logger.info("processResult, rc: {}", rc);
             }
         }, null);
         connectionExpire.setWatcher();
@@ -50,8 +54,7 @@ public class ConnectionExpire extends Base {
 
                     // 可在此处添加断点, 然后修改数据, 触发监视点, 模拟主机过载或因垃圾回收导致进程暂停。
                     // 因无法及时的与zk服务器发送心跳消息, 导致会话过期。
-                    System.out.println("watch work multi");
-                    System.out.println(event);
+                    logger.info("watch work multi, process event: {}", event);
                     setWatcher();
                 }
             }, new Stat());

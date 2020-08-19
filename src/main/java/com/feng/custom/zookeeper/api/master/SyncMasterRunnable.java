@@ -4,6 +4,8 @@ import com.feng.custom.zookeeper.api.Base;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Random;
@@ -17,6 +19,7 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
  * 发生KeeperException时，开发者需知道此时的状态，所以需要执行getData进行判断, NoNodeException表示该节点仍不存在，继续尝试创建。
  */
 public class SyncMasterRunnable extends Base implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(SyncMasterRunnable.class);
     private static final String nodePathSync = "/masterSync";
 
     public void run() {
@@ -29,7 +32,7 @@ public class SyncMasterRunnable extends Base implements Runnable {
             return;
         }
         String serverId = Integer.toHexString(new Random().nextInt());
-        System.out.println("sync run, serverId: " + serverId);
+        logger.info("sync run, serverId: {}", serverId);
 
         // 对应znode节点的元数据
         Stat stat = new Stat();
@@ -82,9 +85,9 @@ public class SyncMasterRunnable extends Base implements Runnable {
             }
         }
         if (isMaster) {
-            System.out.println(serverId + " is master sync");
+            logger.info("{} is master sync", serverId);
         } else {
-            System.out.println(serverId + " is not master sync");
+            logger.info("{} is not master sync", serverId);
         }
         try {
 

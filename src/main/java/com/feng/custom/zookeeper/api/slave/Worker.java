@@ -6,11 +6,14 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 public class Worker extends Base {
+    private static final Logger logger = LoggerFactory.getLogger(Worker.class);
     private static final String serverId = Integer.toHexString(new Random().nextInt());
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -32,14 +35,14 @@ public class Worker extends Base {
                         register();
                         break;
                     case OK:
-                        System.out.println("registered successfully: " + serverId);
+                        logger.info("registered successfully: {}", serverId);
                         countDownLatch.countDown();
                         break;
                     case NODEEXISTS:
-                        System.err.println("Already registered: " + serverId);
+                        logger.error("Already registered: {}", serverId);
                         break;
                     default:
-                        System.err.println("something went wrong: " + KeeperException.create(KeeperException.Code.get(rc), path));
+                        logger.error("something went wrong", KeeperException.create(KeeperException.Code.get(rc), path));
 
                 }
             }
@@ -55,10 +58,10 @@ public class Worker extends Base {
                         setData((String) ctx);
                         break;
                     case OK:
-                        System.out.println("set data ok");
+                        logger.info("set data ok");
                         break;
                     default:
-                        System.err.println("something went wrong: " + KeeperException.create(KeeperException.Code.get(rc), path));
+                        logger.error("something went wrong", KeeperException.create(KeeperException.Code.get(rc), path));
                 }
             }
         }, status);

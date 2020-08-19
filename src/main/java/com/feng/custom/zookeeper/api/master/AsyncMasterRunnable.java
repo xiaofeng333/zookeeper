@@ -5,6 +5,8 @@ import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Random;
@@ -18,6 +20,7 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
  * 所以如果回调函数阻塞, 所有后续回调都会被阻塞, 故应避免这么做, 以便回调调用可以快速被处理
  */
 public class AsyncMasterRunnable extends Base implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(AsyncMasterRunnable.class);
     private static final String nodePathAsync = "/masterAsync";
     private final String serverId = Integer.toHexString(new Random().nextInt());
 
@@ -51,7 +54,7 @@ public class AsyncMasterRunnable extends Base implements Runnable {
      * 创建临时节点
      */
     private void runForMaster() {
-        System.out.println("async run, serverId: " + serverId);
+        logger.info("async run, serverId: {}", serverId);
         getZk().create(nodePathAsync, serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, new AsyncCallback.StringCallback() {
 
             /**
@@ -65,7 +68,7 @@ public class AsyncMasterRunnable extends Base implements Runnable {
             public void processResult(int rc, String path, Object ctx, String name) {
                 switch (KeeperException.Code.get(rc)) {
                     case OK: {
-                        System.out.println(serverId + " is Master async");
+                        logger.info("{} is Master async", serverId);
                         return;
                     }
                     case CONNECTIONLOSS: {
@@ -73,7 +76,7 @@ public class AsyncMasterRunnable extends Base implements Runnable {
                         return;
                     }
                     default: {
-                        System.out.println(serverId + "is not Master async");
+                        logger.info("{} is not Master async", serverId);
                     }
 
                 }
@@ -96,9 +99,9 @@ public class AsyncMasterRunnable extends Base implements Runnable {
                         return;
                     case NODEEXISTS:
                         if (serverId.equals(new String(data))) {
-                            System.out.println(serverId + " is Master async");
+                            logger.info("{} is Master async", serverId);
                         } else {
-                            System.out.println(serverId + "is not Master async");
+                            logger.info("{} is not Master async", serverId);
                         }
                 }
             }

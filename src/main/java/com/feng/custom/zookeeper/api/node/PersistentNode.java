@@ -4,12 +4,15 @@ import com.feng.custom.zookeeper.api.Base;
 import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
 
 public class PersistentNode extends Base {
+    private static final Logger logger = LoggerFactory.getLogger(PersistentNode.class);
 
     public static void main(String[] args) {
         PersistentNode persistentNode = new PersistentNode();
@@ -46,11 +49,11 @@ public class PersistentNode extends Base {
                         break;
                     }
                     case OK: {
-                        System.out.println(path + " created");
+                        logger.info("{} created", path);
                         break;
                     }
                     default: {
-                        System.out.println("create " + path + " error happen: " + rc);
+                        logger.error("create {} happen error, rc: {}", path, rc);
                     }
                 }
             }
