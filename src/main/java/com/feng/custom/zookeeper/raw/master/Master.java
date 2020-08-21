@@ -1,4 +1,4 @@
-package com.feng.custom.zookeeper.api.master;
+package com.feng.custom.zookeeper.raw.master;
 
 /**
  * 模拟多个进程同时设置临时节点

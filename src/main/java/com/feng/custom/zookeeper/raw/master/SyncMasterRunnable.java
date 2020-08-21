@@ -1,6 +1,6 @@
-package com.feng.custom.zookeeper.api.master;
+package com.feng.custom.zookeeper.raw.master;
 
-import com.feng.custom.zookeeper.api.Base;
+import com.feng.custom.zookeeper.raw.Base;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
