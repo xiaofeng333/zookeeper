@@ -16,6 +16,16 @@ public class ZkProperties {
      */
     private Integer sessionTimeout;
 
+    /**
+     * 重试间隔, 单位为ms
+     */
+    private Integer baseSleepTimeMs;
+
+    /**
+     * 重试次数
+     */
+    private Integer maxRetries;
+
     private ZkProperties() {
     }
 
@@ -33,6 +43,8 @@ public class ZkProperties {
                     }
                     zkProperties.setAddress(properties.getProperty("zk.address", "127.0.0.1:2181"));
                     zkProperties.setSessionTimeout(Integer.valueOf(properties.getProperty("zk.sessionTimeout", "15000")));
+                    zkProperties.setBaseSleepTimeMs(Integer.valueOf(properties.getProperty("zk.baseSleepTimeMs", "1000")));
+                    zkProperties.setMaxRetries(Integer.valueOf(properties.getProperty("zk.maxRetries", "3")));
                 }
             }
         }
@@ -53,5 +65,21 @@ public class ZkProperties {
 
     public void setSessionTimeout(Integer sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
+    }
+
+    public Integer getBaseSleepTimeMs() {
+        return baseSleepTimeMs;
+    }
+
+    public void setBaseSleepTimeMs(Integer baseSleepTimeMs) {
+        this.baseSleepTimeMs = baseSleepTimeMs;
+    }
+
+    public Integer getMaxRetries() {
+        return maxRetries;
+    }
+
+    public void setMaxRetries(Integer maxRetries) {
+        this.maxRetries = maxRetries;
     }
 }
