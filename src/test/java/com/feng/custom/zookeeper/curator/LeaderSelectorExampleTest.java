@@ -25,7 +25,7 @@ public class LeaderSelectorExampleTest extends BaseTest {
         List<CuratorFramework> clients = new ArrayList<>();
         List<LeaderSelectorExample> examples = new ArrayList<>();
         for (int i = 0; i < 10; ++i) {
-            CuratorFramework client = CuratorFrameworkFactory.newClient(testingServer.getConnectString(), new ExponentialBackoffRetry(zkProperties.getBaseSleepTimeMs(), zkProperties.getMaxRetries()));
+            CuratorFramework client = CuratorFrameworkFactory.newClient(testingServer.getConnectString(), new ExponentialBackoffRetry(zkProperties.getBaseSleepTimeMs(), zkProperties.getMaxRetries(), zkProperties.getMaxSleepMs()));
             clients.add(client);
 
             LeaderSelectorExample example = new LeaderSelectorExample(client, "/curator/leader", "Client #" + i);

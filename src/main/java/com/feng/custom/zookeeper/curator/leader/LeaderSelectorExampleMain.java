@@ -28,7 +28,7 @@ public class LeaderSelectorExampleMain {
         try {
             ZkProperties zkProperties = ZkProperties.getInstance();
             for (int i = 0; i < CLIENT_QTY; i++) {
-                CuratorFramework client = CuratorFrameworkFactory.newClient(zkProperties.getAddress(), new ExponentialBackoffRetry(zkProperties.getBaseSleepTimeMs(), zkProperties.getMaxRetries()));
+                CuratorFramework client = CuratorFrameworkFactory.newClient(zkProperties.getAddress(), new ExponentialBackoffRetry(zkProperties.getBaseSleepTimeMs(), zkProperties.getMaxRetries(), zkProperties.getMaxSleepMs()));
                 clients.add(client);
 
                 LeaderSelectorExample example = new LeaderSelectorExample(client, PATH, "Client #" + i);

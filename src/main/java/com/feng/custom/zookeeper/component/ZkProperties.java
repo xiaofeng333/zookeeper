@@ -1,5 +1,7 @@
 package com.feng.custom.zookeeper.component;
 
+import org.apache.curator.retry.ExponentialBackoffRetry;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -17,7 +19,7 @@ public class ZkProperties {
     private Integer sessionTimeout;
 
     /**
-     * 重试间隔, 单位为ms
+     * 初始重试间隔, 单位为ms
      */
     private Integer baseSleepTimeMs;
 
@@ -25,6 +27,11 @@ public class ZkProperties {
      * 重试次数
      */
     private Integer maxRetries;
+
+    /**
+     * 最大重试间隔, 指定该参数, 避免重试间隔过长。{@link ExponentialBackoffRetry。getSleepTimeMs(int, long)}
+     */
+    private Integer maxSleepMs;
 
     private ZkProperties() {
     }
@@ -45,6 +52,7 @@ public class ZkProperties {
                     zkProperties.setSessionTimeout(Integer.valueOf(properties.getProperty("zk.sessionTimeout", "15000")));
                     zkProperties.setBaseSleepTimeMs(Integer.valueOf(properties.getProperty("zk.baseSleepTimeMs", "1000")));
                     zkProperties.setMaxRetries(Integer.valueOf(properties.getProperty("zk.maxRetries", "3")));
+                    zkProperties.setMaxSleepMs(Integer.valueOf(properties.getProperty("zk.maxSleepMs", "2000")));
                 }
             }
         }
@@ -81,5 +89,13 @@ public class ZkProperties {
 
     public void setMaxRetries(Integer maxRetries) {
         this.maxRetries = maxRetries;
+    }
+
+    public Integer getMaxSleepMs() {
+        return maxSleepMs;
+    }
+
+    public void setMaxSleepMs(Integer maxSleepMs) {
+        this.maxSleepMs = maxSleepMs;
     }
 }

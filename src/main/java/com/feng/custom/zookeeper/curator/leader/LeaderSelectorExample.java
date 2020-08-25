@@ -62,6 +62,8 @@ public class LeaderSelectorExample extends LeaderSelectorListenerAdapter impleme
      * 当该client成为leader时, 调用的方法。
      * 该方法不应该返回, 除非希望释放领导权。
      * 实际业务中, 为该类中增加stop方法, 在合适的时候调用, 自动放弃leader。
+     * <p>
+     * 注意判断线程是否中断, 当中断后, 即失去领导权, 当及时清理后退出该方法。
      *
      * @param client the client
      * @throws Exception any errors
