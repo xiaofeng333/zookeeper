@@ -13,7 +13,7 @@
         <version.java>1.8</version.java>
         <version.curator>5.1.0</version.curator>
         <version.log4j>1.7.25</version.log4j>
-        <version.junit>4.11</version.junit>
+        <version.junit>4.13.1</version.junit>
     </properties>
 
     <dependencies>
